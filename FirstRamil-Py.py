@@ -41,21 +41,18 @@ order = {
 assert len(order["data"]) > 0, "Заказы отсутствуют"
 ### конец первого задания
 ### 2 задание: Надо убедиться, что время выполнение первого и второго заказов не превышает
-started_1 = datetime.strptime(order["data"][0]["startedAt"], "%Y-%m-%dT%H:%M:%S.%fZ")
-completed_1 = datetime.strptime(order["data"][0]["completedAt"], "%Y-%m-%dT%H:%M:%S.%fZ")
-difference_time_0 = (completed_1 - started_1).seconds
-print(difference_time_0)
-started_2 = datetime.strptime(order["data"][1]["startedAt"], "%Y-%m-%dT%H:%M:%S.%fZ")
-completed_2 = datetime.strptime(order["data"][1]["completedAt"], "%Y-%m-%dT%H:%M:%S.%fZ")
-difference_time_1 = (completed_2 - started_2).seconds
-print(difference_time_1)
-
 time = "%Y-%m-%dT%H:%M:%S.%fZ"
 result = 0
 for i in range(2):
-    final_completed = datetime.strptime(order["data"][i]["startedAt"], time)
+    final_completed = datetime.strptime(order["data"][i]["completedAt"], time)
 final_started = datetime.strptime(order["data"][i]["startedAt"], time)
 result += (final_completed - final_started).seconds
-assert result < 6, "время превышает 6 часов"
+assert result < 21600, "время превышает 6 часов"
 print("время равна ", result)
-### 3-е задание:
+#3-е задание: Надо убедиться, что для третьего заказа все услуги обработаны И выполнено не меньше половины.
+# Ну или по крайней мере на текущий момент возвращено не больше, чем выполнено, а ожидают возврат не больше, чем уже возвращено
+count_order = order["data"][2]["count"]
+completed_order = order["data"][2]["completed"]
+refunded_order = order["data"][2]["refunded"]
+wait_refund_order = order["data"][2]["wait_refund"]
+assert  (completed_order + refunded_order + wait_refund_order == count_order and completed_order <= count_order/2) or (refunded_order < completed_order) and  (wait_refund_order <=refunded_order)
