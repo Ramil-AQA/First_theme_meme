@@ -1,3 +1,4 @@
+import  random
 # Определение базового класса BankAccount:
 class BankAccount:
     def __init__(self, owner, balance=0):
@@ -42,6 +43,6 @@ class CheckingAccount(BankAccount):
 
 
 my_account = SavingsAccount(owner="Timur")
-my_account.deposit(190)
-my_account.withdraw(100)
+my_account.deposit(random.randint(100, 10000000))
+my_account.withdraw(random.randint(10, 10000))
 my_account.apply_interest()
