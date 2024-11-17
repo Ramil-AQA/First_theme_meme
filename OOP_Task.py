@@ -28,17 +28,15 @@ class SavingsAccount(BankAccount):
         super().__init__(owner, balance)
 
         def apply_interest(self):
-            self.balance *= interest_rate
+            self.__balance *= interest_rate
             return self.balance
 
             # Создание класса CheckingAccount (наследуется от BankAccount):
             class CheckingAccount(BankAccount):
-                def __init__(self, owner, balance=0):
-                    super().__init__(owner, balance)
 
                 def withdraw(self, amount):
-                    if self.balance < amount:
+                    if self.__balance < amount:
                         print("Ошибка, недостаточно средств")
                     else:
-                        self.balance -= amount
+                        self.__balance -= amount
                         print(f"Снятие баланса, остаток на счете: {self.balance}")
