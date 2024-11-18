@@ -1,4 +1,6 @@
-import  random
+import random
+
+
 # Определение базового класса BankAccount:
 class BankAccount:
     def __init__(self, owner, balance=0):
@@ -19,8 +21,8 @@ class BankAccount:
             self.__balance -= amount
             print(f"Снятие баланса, остаток на счете: {self.__balance}")
 
-            def get_balance(self):
-                print(f"Текущий баланс {self.__balance}")
+    def get_balance(self):
+        print(f"Текущий баланс {self.__balance}")
 
 
 # Создание класса SavingsAccount
@@ -32,17 +34,20 @@ class SavingsAccount(BankAccount):
     def apply_interest(self):
         self._BankAccount__balance *= self.interest_rate
         print(f"Начислен процент {self.interest_rate} сумма баланса равна: {self._BankAccount__balance}")
-
         # Создание класса CheckingAccount (наследуется от BankAccount):
 
 
 class CheckingAccount(BankAccount):
+    def __init__(self, owner, balance=0):
+        super().__init__(owner, balance)
+
     def withdraw(self, amount):
         self.__balance -= amount
-        print(f"Снятие баланса, остаток на счете: {self.__balance}")
+        print(f"Снятие баланса, остаток на счете: {self._BankAccount__balance}")
 
 
 my_account = SavingsAccount(owner="Timur")
 my_account.deposit(random.randint(100, 10000000))
+my_account.get_balance()
 my_account.withdraw(random.randint(10, 10000))
 my_account.apply_interest()
