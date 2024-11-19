@@ -1,4 +1,5 @@
 import random
+import pytest
 
 
 # Определение базового класса BankAccount:
@@ -22,7 +23,7 @@ class BankAccount:
             print(f"Снятие баланса, остаток на счете: {self.__balance}")
 
     def get_balance(self):
-        print(f"Текущий баланс {self.__balance}")
+        print(f"Текущий баланс: {self.__balance}")
 
 
 # Создание класса SavingsAccount
@@ -42,7 +43,7 @@ class CheckingAccount(BankAccount):
         super().__init__(owner, balance)
 
     def withdraw(self, amount):
-        self.__balance -= amount
+        self._BankAccount__balance -= amount
         print(f"Снятие баланса, остаток на счете: {self._BankAccount__balance}")
 
 
@@ -51,3 +52,18 @@ my_account.deposit(random.randint(100, 10000000))
 my_account.get_balance()
 my_account.withdraw(random.randint(10, 10000))
 my_account.apply_interest()
+
+
+def test_sum_deposit():
+    my_account.deposit(random.randint(1, 1000))
+
+    assert my_account._BankAccount__balance > 0
+    "Ошибка, сумма  меньше нуля"
+
+
+def test_sum_withdraw():
+    my_account.withdraw(random.randint(10, 10000))
+
+
+assert my_account._BankAccount__balance > 0
+"Ошибка, сумма  меньше нуля"
