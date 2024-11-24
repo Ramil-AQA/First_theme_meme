@@ -1,4 +1,5 @@
 from datetime import datetime
+
 order = {
     "state": 0,
     "data": [
@@ -49,10 +50,11 @@ final_started = datetime.strptime(order["data"][i]["startedAt"], time)
 result += (final_completed - final_started).seconds
 assert result < 21600, "время превышает 6 часов"
 print("время равна ", result)
-#3-е задание: Надо убедиться, что для третьего заказа все услуги обработаны И выполнено не меньше половины.
+# 3-е задание: Надо убедиться, что для третьего заказа все услуги обработаны И выполнено не меньше половины.
 # Ну или по крайней мере на текущий момент возвращено не больше, чем выполнено, а ожидают возврат не больше, чем уже возвращено
 count_order = order["data"][2]["count"]
 completed_order = order["data"][2]["completed"]
 refunded_order = order["data"][2]["refunded"]
 wait_refund_order = order["data"][2]["wait_refund"]
-assert  (completed_order + refunded_order + wait_refund_order == count_order and completed_order <= count_order/2) or (refunded_order < completed_order) and  (wait_refund_order <=refunded_order)
+assert (completed_order + refunded_order + wait_refund_order == count_order and completed_order <= count_order / 2) or (
+        refunded_order < completed_order) and (wait_refund_order <= refunded_order)
