@@ -6,7 +6,7 @@ from Test.test_positive_booking import TestBooker
 from constant import BASE_URL
 
 
-class TestNegative_booking(TestBooker):
+class TestNegative_booking():
     # для get запроса, проверка несуществующих айдишников
     def test_get_negative(self, empty_data, auth_session, invalid_values):
         get_different_value = auth_session.get(f"{BASE_URL}/booking/{random.randint(-1111111111, 999999999999)}")

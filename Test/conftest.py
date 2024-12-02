@@ -1,9 +1,10 @@
 import random
 import string
-
 import pytest
 import requests
+
 from faker import Faker
+from assertpy import assert_that
 
 from constant import BASE_URL
 from constant import HEADERS
@@ -42,23 +43,26 @@ def booking_data():
             "additionalneeds": "Breakfast"
         }
 
-    return _booking_data()
-
+    return _booking_data
 
 @pytest.fixture()
-def update_data():
-    return {
-        "firstname": fake.first_name(),
-        "lastname": fake.last_name(),
-        "totalprice": fake.random_int(100, 1000000),
-        "depositpaid": bool(random.getrandbits(1)),
-        "bookingdates": {
-            "checkin": "2020-01-01",
-            "checkout": "2024-01-01"
-        },
-        "additionalneeds": "Breakfast"
-    }
+def new_booking(booking_data, auth_session):
+    booking_id = None
 
+    def _new_booking():
+        nonlocal booking_id
+        data = booking_data()
+        create_booking = auth_session.post(f"{BASE_URL}/booking", json=data)
+        assert_that(create_booking.status_code).is_equal_to(200)
+        booking_id = create_booking.json().get("bookingid")
+        return booking_id, data
+
+    yield _new_booking
+
+    delete_booking = auth_session.delete(f"{BASE_URL}/booking/{booking_id}")
+    assert_that(delete_booking.status_code).is_equal_to(201), f"Ошибка при удалении букинга с ID {booking_id}"
+    get_deleted_booking = auth_session.get(f"{BASE_URL}/booking{booking_id}")
+    assert_that(get_deleted_booking.status_code).is_equal_to(404), "Букинг не был удален"
 
 @pytest.fixture()
 def values_for_patch():
