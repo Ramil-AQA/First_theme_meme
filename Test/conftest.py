@@ -73,23 +73,8 @@ def values_for_patch():
 
 
 @pytest.fixture()
-def negative_values_for_patch():
-    return 0
-
-
-@pytest.fixture()
-def empty_data():
-    return {
-        "firstname": None,
-        "lastname": None,
-        "totalprice": [],
-        "depositpaid": "",
-        "bookingdates": {
-            "checkin": None,
-            "checkout": None
-        },
-        "additionalneeds": None
-    }
+def empty_values_for_method():
+    return {}
 
 
 @pytest.fixture()
@@ -97,3 +82,6 @@ def invalid_values(length=112):
     characters = string.ascii_letters + string.digits + string.punctuation
     values = ''.join(random.choice(characters) for _ in range(length))
     return values
+@pytest.fixture()
+def generation():
+    return random.randint(-1111, 99999)
