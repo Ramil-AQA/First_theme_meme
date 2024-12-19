@@ -1,10 +1,10 @@
 import random
 import string
+
 import pytest
 import requests
-
-from faker import Faker
 from assertpy import assert_that
+from faker import Faker
 
 from constant import BASE_URL
 from constant import HEADERS
@@ -45,6 +45,7 @@ def booking_data():
 
     return _booking_data
 
+
 @pytest.fixture()
 def new_booking(booking_data, auth_session):
     booking_id = None
@@ -64,24 +65,9 @@ def new_booking(booking_data, auth_session):
     get_deleted_booking = auth_session.get(f"{BASE_URL}/booking{booking_id}")
     assert_that(get_deleted_booking.status_code).is_equal_to(404), "Букинг не был удален"
 
-@pytest.fixture()
-def values_for_patch():
-    return {
-        "firstname": fake.first_name(),
-        "lastname": fake.last_name(),
-    }
-
 
 @pytest.fixture()
-def empty_values_for_method():
-    return {}
-
-
-@pytest.fixture()
-def invalid_values(length=112):
+def invalid_values(length=55):
     characters = string.ascii_letters + string.digits + string.punctuation
     values = ''.join(random.choice(characters) for _ in range(length))
     return values
-@pytest.fixture()
-def generation():
-    return random.randint(-1111, 99999)
