@@ -1,3 +1,5 @@
+from faker import Faker
+
 from saucedemo.checkout_complete_page import Checkout_complete_page
 from saucedemo.checkout_overview import CheckoutOverview
 from saucedemo.checkout_page import CheckoutPage
