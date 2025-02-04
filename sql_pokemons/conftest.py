@@ -28,7 +28,7 @@ def pokemon_data():
             'photo_id': photo_id
         }
 
-    return _pokemon_data()
+    return _pokemon_data
 
 
 @pytest.fixture
@@ -37,32 +37,28 @@ def create_pokemon(pokemon_data, auth_sessions):
 
     def _create_pokemon():
         nonlocal pokemon_id
-        data = pokemon_data
+        data = pokemon_data()
         create_post_request_for_pokemon = auth_sessions.post(f"{BASE_URL}/pokemons", json=data)
         assert_that(create_post_request_for_pokemon.status_code).is_equal_to(201)
         pokemon_id = create_post_request_for_pokemon.json().get('id')
         assert pokemon_id is not None, 'Айдишки нет, перепроверь тест'
         return create_post_request_for_pokemon.json(), data
 
-    return _create_pokemon()
+    yield _create_pokemon
     throw_pokemon = row_query(f'SELECT status FROM public.pokemons WHERE id = {pokemon_id}')
-    if throw_pokemon == {"status": 1}:
+    if throw_pokemon[0] == {"status": 1}:
         knockout_pokemon = auth_sessions.post(f'{BASE_URL}/pokemons/knockout', json={"pokemon_id": pokemon_id})
         assert_that(knockout_pokemon.status_code).is_equal_to(200)
-    else:
-        assert_that(throw_pokemon[0]).contains_entry(
-            {'status':1}
-        )
-
 
 @pytest.fixture
 def add_in_pokeball(auth_sessions, create_pokemon):
-    response, data = create_pokemon
-    pokemon_id = response.get('id')
-    add_in_pokeball = auth_sessions.post(f"{BASE_URL}/trainers/add_pokeball", json={"pokemon_id": pokemon_id})
-    assert_that(add_in_pokeball.status_code).is_equal_to(200)
-    return pokemon_id
-
+    def _add_in_pokeball():
+        response, data = create_pokemon()
+        pokemon_id = response.get('id')
+        add_in_pokeball = auth_sessions.post(f"{BASE_URL}/trainers/add_pokeball", json={"pokemon_id": pokemon_id})
+        assert_that(add_in_pokeball.status_code).is_equal_to(200)
+        return pokemon_id
+    return _add_in_pokeball
 
 @pytest.fixture
 def choose_pokemon_id():
@@ -75,6 +71,9 @@ def choose_pokemon_id():
 
 @pytest.fixture
 def enemy_pokemon():
-    pokemons = row_query(f'SELECT * FROM public.pokemons WHERE "in_pokeball" = 1 AND NOT "trainer_id" = 27241')
-    random_pokemons = random.choice(pokemons)
-    return random_pokemons
+    def _enemy_pokemon():
+        pokemons = row_query(f'SELECT * FROM public.pokemons WHERE "in_pokeball" = 1 AND NOT "trainer_id" = 27241')
+        random_pokemons = random.choice(pokemons)
+        return random_pokemons
+
+    return _enemy_pokemon
